@@ -1,0 +1,2 @@
+RMI:
+- https://alain-defrance.developpez.com/articles/Java/J2SE/micro-rmi/
