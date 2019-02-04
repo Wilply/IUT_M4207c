@@ -1,15 +1,16 @@
 import java.rmi.registry.*;
 import java.util.*;
+import java.util.Random ;
 public class test {
     public static void main(String[] args) {
-        try {
-            Registry reg = LocateRegistry.getRegistry("192.168.1.34", 1099);
-            String[] ls = reg.list();
-            for (int i = 0; i < ls.length; i++) {
-                System.out.println(ls[i]);
+        final Random rdm = new Random();
+        while (true) {
+            System.out.println(rdm.nextInt(5));
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
