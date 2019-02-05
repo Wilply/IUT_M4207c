@@ -35,10 +35,27 @@ public class CapteurSimplifie {
         this.valeur = 20;
     }
 
-    private double genererValeur() {
+    private void genererValeur() {
         //genere une valeur de type double
         // 5 est le "pas", la diffenrence max entre 2 valeur successive 
-        return 2 * this.random.nextDouble();
+        double rmdValeur = 2 * this.random.nextDouble();
+        int addOrMinus = this.random.nextInt(2);
+        if (this.valeur - rmdValeur < this.min) {
+            //si on va passer sous le minimum on ajoute la valeur
+            this.valeur = this.valeur + rmdValeur;
+        } else if (this.valeur + rmdValeur > this.max) {
+            //si on va passer au dessus du max on soustrait la valeur
+            this.valeur = this.valeur - rmdValeur;
+        } else {
+            //on reste dans les limites
+            if (addOrMinus == 0) {
+                //si == 0 on ajoute la valeur
+                this.valeur = this.valeur + rmdValeur;
+            } else {
+                //sinon on soustrait la valeur
+                this.valeur = this.valeur - rmdValeur;
+            }
+        }
     }
 
     public void stop() {
@@ -54,25 +71,8 @@ public class CapteurSimplifie {
 
     public void start() throws Exception {
         while (this.start) {
-            //la valuer de addOrMinus est 0 ou 1
-            int addOrMinus = this.random.nextInt(2);
-            double valeurgenere = genererValeur();
-            if (this.valeur - valeurgenere < this.min) {
-                //si on va passer sous le minimum on ajoute la valeur
-                this.valeur = this.valeur + valeurgenere;
-            } else if (this.valeur + valeurgenere > this.max) {
-                //si on va passer au dessus du max on soustrait la valeur
-                this.valeur = this.valeur - valeurgenere;;
-            } else {
-                //on reste dans les limites
-                if (addOrMinus == 0) {
-                    //si == 0 on ajoute la valeur
-                    this.valeur = this.valeur + valeurgenere;
-                } else {
-                    //sinon on soustrait la valeur
-                    this.valeur = this.valeur - valeurgenere;
-                }
-            }
+            //on genere un nouvelle valeur
+            genererValeur();
             //on envoie la valeur a la centrale
             this.centrale.getValeur(this.id, this.valeur);
             //pas encore implementé coté centrale PAS TOUCHER
