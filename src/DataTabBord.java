@@ -40,7 +40,7 @@ public class DataTabBord {
     }
 
     public String[] getSubscribedCapteur() {
-        return (String[])capteurId.toArray();
+        return capteurId.toArray(new String[capteurId.size()]);
     }
 
     public boolean isSubscribedToCapteur(String id) {

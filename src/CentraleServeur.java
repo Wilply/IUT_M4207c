@@ -4,6 +4,7 @@ public class CentraleServeur {
         try {
             //on creer le registre
             Registry registre = LocateRegistry.createRegistry(1099);
+            //System.setProperty("java.rmi.server.hostname","10.2.13.203");
             System.out.println("Registre cree");
             //on creer la centrale
             CentraleImpl centrale = new CentraleImpl("centrale");

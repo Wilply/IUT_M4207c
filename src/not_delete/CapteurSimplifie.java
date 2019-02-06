@@ -18,9 +18,10 @@ public class CapteurSimplifie {
     //nom du capteur
     private String name;
 
-    public CapteurSimplifie(String centraleAddr) throws Exception{
+    public CapteurSimplifie(String centraleAddr) throws Exception {
         //on recupère la centrale;
-        this.centrale = (CentraleInterface)LocateRegistry.getRegistry(centraleAddr).lookup("centrale");
+        System.setProperty("java.rmi.server.hostname","10.2.13.201");
+        this.centrale = (CentraleInterface)LocateRegistry.getRegistry(centraleAddr, 1099).lookup("centrale");
         //on declare la centrale
         this.id = centrale.ajouterCapteur();
         System.out.println("Capteur initialize avec l'id : " + id);
@@ -71,13 +72,17 @@ public class CapteurSimplifie {
 
     public void start() throws Exception {
         while (this.start) {
-            //on genere un nouvelle valeur
-            genererValeur();
-            //on envoie la valeur a la centrale
-            this.centrale.getValeur(this.id, this.valeur);
-            //pas encore implementé coté centrale PAS TOUCHER
-            //this.newName(this.centrale.getName(this.id));
-            //on attend 5s avant de recommencer
+            try {
+                //on genere un nouvelle valeur
+                genererValeur();
+                //on envoie la valeur a la centrale
+                this.centrale.getValeur(this.id, this.valeur);
+                //pas encore implementé coté centrale PAS TOUCHER
+                //this.newName(this.centrale.getName(this.id));
+                //on attend 5s avant de recommencer
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Thread.sleep(5000);
         }
     }

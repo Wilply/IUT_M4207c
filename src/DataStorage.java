@@ -27,6 +27,10 @@ public class DataStorage {
         return id;
     }
 
+    public void deleteTabBord(String id) {
+        listTabBord.remove(id);
+    }
+
     public DataCapteur getCapteur(String id) {
         return listCapteur.get(id);
     }
