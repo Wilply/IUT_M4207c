@@ -20,6 +20,7 @@ public class CapteurServeur {
                 System.out.println();
                 System.out.printf(" %-2d - %-15s\n", 1, "Capteur de Temperature");
                 System.out.printf(" %-2d - %-15s\n", 2, "Capteur de Luminosité");
+                System.out.printf(" %-2d - %-15s\n", 3, "Capteur de Presence");
                 System.out.println();
                 System.out.print("Entrez le numero du type de capteur : ");
                 choix = input.nextLine();
@@ -29,7 +30,7 @@ public class CapteurServeur {
                     break;
                 } else if (isInteger(choix)) {
                     //si le choix est compris entre 1 et 2 IL FAUDRA LE MODIFIER
-                    if ((Integer.parseInt(choix) >= 1) && (Integer.parseInt(choix) <= 2)) {
+                    if ((Integer.parseInt(choix) >= 1) && (Integer.parseInt(choix) <= 3)) {
                         break;
                     }
                 } else {
@@ -49,6 +50,14 @@ public class CapteurServeur {
                 case 2:
                     capteur = new CapteurLuminosite(args[0]);
                     System.out.println("Capteur de Luminosité instancié");
+                    if (args.length >= 2) {
+                        capteur.setName(args[1]);   
+                    }
+                    capteur.start();
+                    break;
+                case 3:
+                    capteur = new CapteurPresence(args[0]);
+                    System.out.println("Capteur de Presence instancié");
                     if (args.length >= 2) {
                         capteur.setName(args[1]);   
                     }
@@ -78,5 +87,12 @@ public class CapteurServeur {
         }
         // si on a pas return false on return true
         return true;
+    }
+
+    private static void clearScreen() {
+        String ANSI_CLS = "\u001b[2J";
+        String ANSI_HOME = "\u001b[H";
+        System.out.print(ANSI_CLS + ANSI_HOME);
+        System.out.flush();
     }
 }

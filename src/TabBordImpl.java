@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
+import java.text.*;
 
 public class TabBordImpl extends UnicastRemoteObject implements TabBordInterface {
 
@@ -42,8 +43,12 @@ public class TabBordImpl extends UnicastRemoteObject implements TabBordInterface
     }
 
     private void afficher() throws Exception {
+        NumberFormat format = new DecimalFormat("#0.00");
+        String value;
+        clearScreen();
         for (String key : valeurs.keySet()) {
-            System.out.println("temperature du capteur " + this.centrale.getCapteurName(key) + " : " + valeurs.get(key));
+            value = format.format(valeurs.get(key));
+            System.out.println("temperature du capteur \"" + this.centrale.getCapteurName(key) + "\" : " + value);
         }
     }
 
@@ -67,6 +72,7 @@ public class TabBordImpl extends UnicastRemoteObject implements TabBordInterface
         LinkedHashMap<String,String> capteurList;
         ArrayList<String> keylist;
         String choix;
+        boolean premierChoix = true;
         try {
             capteurList = centrale.getCapteurList();
             keylist = new ArrayList<>(capteurList.keySet());
@@ -74,10 +80,14 @@ public class TabBordImpl extends UnicastRemoteObject implements TabBordInterface
                 if (keylist.size() == 0) {
                     break;
                 }
-                System.out.println("A quel(s) capteur voulez vous vous abonner ?");
+                if (premierChoix) {
+                    System.out.println("A quel(s) capteur voulez vous vous abonner ?");
+                } else {
+                    System.out.println("A quel AUTRE capteur voulez vous vous abonner ?");
+                }
                 System.out.println();
                 for (String key : keylist) {
-                    System.out.printf(" %-2d - %-15s %-1s\n", keylist.indexOf(key), capteurList.get(key) , key);
+                    System.out.printf(" %-2d - %-15s \" %-1s\n", keylist.indexOf(key), "\" " + capteurList.get(key) + " \"" , key);
                 }
                 System.out.print("Entrer le numero du capteur ou rien pour valider : ");
                 choix = input.nextLine();
@@ -90,10 +100,13 @@ public class TabBordImpl extends UnicastRemoteObject implements TabBordInterface
                 } else if ((Integer.parseInt(choix) < 0)||(Integer.parseInt(choix) > (keylist.size() - 1))) {
                     System.out.println("****************************************");
                     System.out.println("Choix invalide");
+                    premierChoix = false;
                 } else {
                     capteur.add(keylist.get(Integer.parseInt(choix)));
                     keylist.remove(Integer.parseInt(choix));
+                    premierChoix = false;
                 }
+                clearScreen();
             }
         } catch (java.rmi.ConnectException e) {
             System.out.println("Impossible de joindre la centrale");
@@ -112,7 +125,14 @@ public class TabBordImpl extends UnicastRemoteObject implements TabBordInterface
         } catch(NullPointerException e) {
             return false;
         }
-        // only got here if we didn't return false
+        // si ya pas d'erreur on revoir true
         return true;
+    }
+
+    private static void clearScreen() {
+        String ANSI_CLS = "\u001b[2J";
+        String ANSI_HOME = "\u001b[H";
+        System.out.print(ANSI_CLS + ANSI_HOME);
+        System.out.flush();
     }
 }
